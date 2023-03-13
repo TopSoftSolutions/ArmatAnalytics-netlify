@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@nuxt/content": "^1.15.1",
+    "@nuxt/content": "^2.5.2",
     "@nuxtjs/markdownit": "^2.0.0",
     "@nuxtjs/recaptcha": "^1.1.1",
     "aos": "^2.3.4",
