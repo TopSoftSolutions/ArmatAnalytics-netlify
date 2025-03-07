@@ -86,7 +86,7 @@
                 <b-form-file id="input-file" name="resume" size="lg" @change="previewFiles"></b-form-file>
                 <b-button type="button" size="lg" class="w-100 attach-button" @click="chooseFiles()">
                   <b-img class="attach-image" src="/images/attach-svgrepo-com-1.png"></b-img>
-                  <span id="file-input-text">Attach Resume*</span>
+                  <span id="file-input-text">Attach Resume</span>
                 </b-button>
               </b-col>
             </b-row>
@@ -134,7 +134,6 @@ export default {
       if (!fields.surname) return 'Please enter your surname.';
       if (!fields.phonenumber) return 'Please enter your phone number.';
       if (!fields.email) return 'Please enter your email.';
-      if (!fields.resume || fields.resume.size === 0) return 'Please upload your resume.';
       return null; // No errors
     },
     async onSubmit(event) {
@@ -149,10 +148,7 @@ export default {
           surname: formData.get('surname')?.trim(),
           phonenumber: formData.get('phonenumber')?.trim(),
           email: formData.get('email')?.trim(),
-          resume: formData.get('resume') // File input
         };
-
-        const jobTitle = formData.get('form-name');
 
         // Validate required fields
         const errorMessage = this.validateFields(fields);
@@ -166,7 +162,7 @@ export default {
         await this.$recaptcha.getResponse();
         
         // Submit the form to Netlify
-        const response = await fetch('/.netlify/functions/submission-created', {
+        const response = await fetch(process.env.SUBMISSION_URL, {
           method: "POST",
           body: formData,
         });
