@@ -122,17 +122,17 @@
                 </b-col>
              </b-row>
             <b-container class="accordion-container" id="accordion">
-                <div v-for="(vacancy, index) in ourVacancies" :key="index" class="accordion" role="tablist">
-                    <b-card no-body class="accordion-item">
+                <div v-for="(vacancy, index) in sortedVacancies" :key="index" class="accordion" role="tablist">
+                    <b-card no-body class="accordion-item mb-2">
                         <b-card-header class="border-0 py-4 bg-transparent" role="tab">
                             <div class="left-border"></div>
                             <b-button class="accordion-button accordion-button-noborder d-flex justify-content-between"
-                            block v-b-toggle.accordion-1 variant="transparent">
+                            block v-b-toggle="'accordion-' + index" variant="transparent">
                                 <h6 class="mb-lg-0 text-left sas-font">{{ vacancy.title }}</h6>
                                 <b-img class="plus-icon" src="/images/icons8-plus-50.png" width="30"></b-img>
                             </b-button>
                         </b-card-header>
-                        <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
+                        <b-collapse :id="`accordion-${index}`" accordion="my-accordion" role="tabpanel">
                             <b-card-body class="accordion-body">
                                 <b-card-text v-html="$md.render(vacancy.description)"></b-card-text>
                                 <div class="text-lg-right my-3">
@@ -152,6 +152,11 @@
 import _ from 'lodash'
 export default {
     name: 'CareersPage',
+    computed: {
+        sortedVacancies() {
+            return [...this.ourVacancies].sort((a, b) => a.orderKey - b.orderKey);
+        }
+    },
     async asyncData({ $content }) {
         let keyTosuccess = await $content('keytosuccess').fetch();
         let whyJoinContents = await $content('whyjoin').fetch();
