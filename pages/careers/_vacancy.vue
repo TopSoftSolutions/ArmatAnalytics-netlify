@@ -32,7 +32,7 @@
                   size="lg"
                   type="text"
                   name="name"
-                  placeholder="Name"
+                  placeholder="Name*"
                 ></b-form-input>
               </b-col>
               <b-col col lg="6" md="6" sm="6">
@@ -41,7 +41,7 @@
                   size="lg"
                   type="text"
                   name="surname"
-                  placeholder="Surname"
+                  placeholder="Surname*"
                 ></b-form-input>
               </b-col>
             </b-row>
@@ -52,7 +52,7 @@
                   size="lg"
                   type="tel"
                   name="phonenumber"
-                  placeholder="Phone Number"
+                  placeholder="Phone Number*"
                 ></b-form-input>
               </b-col>
             </b-row>
@@ -63,7 +63,7 @@
                   size="lg"
                   type="email"
                   name="email"
-                  placeholder="Email"
+                  placeholder="Email*"
                   trim
                 ></b-form-input>
               </b-col>
@@ -86,19 +86,19 @@
                 <b-form-file id="input-file" name="resume" size="lg" @change="previewFiles"></b-form-file>
                 <b-button type="button" size="lg" class="w-100 attach-button" @click="chooseFiles()">
                   <b-img class="attach-image" src="/images/attach-svgrepo-com-1.png"></b-img>
-                  <span id="file-input-text">Attach Resume</span>
+                  <span id="file-input-text">Attach Resume*</span>
                 </b-button>
               </b-col>
             </b-row>
             <recaptcha />
             <b-row class="mt-5">
               <b-col col lg="12" md="12" sm="12">
-                <b-button type="submit" class="w-100 apply-button" size="lg" variant="primary">Apply</b-button>
+                <b-button type="submit" class="w-100 apply-button" size="lg" variant="primary">Submit</b-button>
               </b-col>
             </b-row>
             <b-row class="mt-4">
               <b-col class="text-center">
-                <p v-if="submitMessage">{{ submitMessage }}</p>
+                <h5 :class="`${submitMessageColor}`" v-if="submitMessage">{{ submitMessage }}</h5>
               </b-col>
             </b-row>
           </form>
@@ -115,7 +115,8 @@ export default {
   name: 'SubmitPage',
   data() {
     return {
-      submitMessage: null
+      submitMessage: null,
+      submitMessageColor: ""
     }
   },
   methods: {
@@ -128,31 +129,64 @@ export default {
         document.getElementById('file-input-text').innerText = files[0].name
       }
     },
+    validateFields(fields) {
+      if (!fields.name) return 'Please enter your name.';
+      if (!fields.surname) return 'Please enter your surname.';
+      if (!fields.phonenumber) return 'Please enter your phone number.';
+      if (!fields.email) return 'Please enter your email.';
+      if (!fields.resume || fields.resume.size === 0) return 'Please upload your resume.';
+      return null; // No errors
+    },
     async onSubmit(event) {
       try {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(event.target);
+        
+        // Get form values and trim text inputs
+        const fields = {
+          name: formData.get('name')?.trim(),
+          surname: formData.get('surname')?.trim(),
+          phone: formData.get('phone')?.trim(),
+          email: formData.get('email')?.trim(),
+          resume: formData.get('resume') // File input
+        };
+
+        // Validate required fields
+        const errorMessage = this.validateFields(fields);
+        if (errorMessage) {
+          this.submitMessageColor = "text-danger";
+          this.submitMessage = errorMessage;
+          return;
+        }
+
         // Wait for the reCAPTCHA token
-        await this.$recaptcha.getResponse()
+        await this.$recaptcha.getResponse();
+        
         // Submit the form to Netlify
-        const response = await fetch('/', {
-          method: 'POST',
-          // headers: {
-          //   'Content-Type': 'application/x-www-form-urlencoded'
-          // },
-          body: new FormData(event.target)
-        })
+        const response = await fetch("/", {
+          method: "POST",
+          body: formData,
+        });
 
         // Throw an error if the response was not successful
         if (!response.ok) {
-          console.log(response)
-          throw new Error('Response was not successful')
+          console.log(response);
+          throw new Error("Response was not successful");
         }
 
         // Say thank you and reset reCAPTCHA
-        this.submitMessage = 'Your application was submitted successfully!'
-        await this.$recaptcha.reset()
+        this.submitMessageColor = "text-success";
+        this.submitMessage = "Application successfully submitted. Thank you!";
+        await this.$recaptcha.reset();
+
+        // Clear the form inputs
+        event.target.reset();
+        document.getElementById("file-input-text").innerText = "No file chosen";
       } catch {
         // Error message if something goes wrong
-        this.submitMessage = 'Something went wrong, please try again.'
+        this.submitMessageColor = "text-danger";
+        this.submitMessage = "Something went wrong, please try again.";
       }
     }
   },
