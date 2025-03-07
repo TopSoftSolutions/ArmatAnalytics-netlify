@@ -147,10 +147,12 @@ export default {
         const fields = {
           name: formData.get('name')?.trim(),
           surname: formData.get('surname')?.trim(),
-          phone: formData.get('phone')?.trim(),
+          phonenumber: formData.get('phonenumber')?.trim(),
           email: formData.get('email')?.trim(),
           resume: formData.get('resume') // File input
         };
+
+        const jobTitle = formData.get('form-name');
 
         // Validate required fields
         const errorMessage = this.validateFields(fields);
@@ -164,7 +166,7 @@ export default {
         await this.$recaptcha.getResponse();
         
         // Submit the form to Netlify
-        const response = await fetch("/", {
+        const response = await fetch('/.netlify/functions/submission-created', {
           method: "POST",
           body: formData,
         });
