@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer')
+import { createTransport } from 'nodemailer'
 
-exports.handler = async (event) => {
+export async function handler(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed', headers: { Allow: 'POST' } }
   }
@@ -11,7 +11,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
       auth: {

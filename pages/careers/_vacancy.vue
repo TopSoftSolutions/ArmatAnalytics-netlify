@@ -86,7 +86,7 @@
                 <b-form-file id="input-file" name="resume" size="lg" @change="previewFiles"></b-form-file>
                 <b-button type="button" size="lg" class="w-100 attach-button" @click="chooseFiles()">
                   <b-img class="attach-image" src="/images/attach-svgrepo-com-1.png"></b-img>
-                  <span id="file-input-text">Attach Resume*</span>
+                  <span id="file-input-text">Attach Resume</span>
                 </b-button>
               </b-col>
             </b-row>
@@ -134,8 +134,47 @@ export default {
       if (!fields.surname) return 'Please enter your surname.';
       if (!fields.phonenumber) return 'Please enter your phone number.';
       if (!fields.email) return 'Please enter your email.';
-      if (!fields.resume || fields.resume.size === 0) return 'Please upload your resume.';
       return null; // No errors
+    },
+    sendEmail(payload) {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
+        },
+        secure: false,
+        requireTLS: true,
+      })
+
+      const mailOptions = {
+        from: `${process.env.SMTP_SENDER_NAME} <${process.env.SMTP_SENDER_EMAIL}>`,
+        to: payload.email,
+        subject: 'Application Confirmation',
+        text: `Dear ${payload.name},\n\n
+
+          Thank you for applying for the ${payload.vacancy} position at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\n
+          
+          Best regards,\n
+          Armat Analytics`,
+      }
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error(`Failed to send email. Error: ${error.message}`)
+          return {
+            statusCode: 500,
+            body: JSON.stringify({ error: err.message }),
+          }
+        } else {
+          console.log('Email sent successfully:', info)
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Email sent successfully!' }),
+          }
+        }
+      })
     },
     async onSubmit(event) {
       try {
@@ -149,10 +188,7 @@ export default {
           surname: formData.get('surname')?.trim(),
           phonenumber: formData.get('phonenumber')?.trim(),
           email: formData.get('email')?.trim(),
-          resume: formData.get('resume') // File input
         };
-
-        const jobTitle = formData.get('form-name');
 
         // Validate required fields
         const errorMessage = this.validateFields(fields);
@@ -166,7 +202,7 @@ export default {
         await this.$recaptcha.getResponse();
         
         // Submit the form to Netlify
-        const response = await fetch('/.netlify/functions/submission-created', {
+        const response = await fetch(process.env.SUBMISSION_URL, {
           method: "POST",
           body: formData,
         });
