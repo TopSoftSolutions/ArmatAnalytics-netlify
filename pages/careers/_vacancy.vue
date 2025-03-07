@@ -136,46 +136,6 @@ export default {
       if (!fields.email) return 'Please enter your email.';
       return null; // No errors
     },
-    sendEmail(payload) {
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        auth: {
-          user: process.env.SMTP_USERNAME,
-          pass: process.env.SMTP_PASSWORD,
-        },
-        secure: false,
-        requireTLS: true,
-      })
-
-      const mailOptions = {
-        from: `${process.env.SMTP_SENDER_NAME} <${process.env.SMTP_SENDER_EMAIL}>`,
-        to: payload.email,
-        subject: 'Application Confirmation',
-        text: `Dear ${payload.name},\n\n
-
-          Thank you for applying for the ${payload.vacancy} position at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\n
-          
-          Best regards,\n
-          Armat Analytics`,
-      }
-
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error(`Failed to send email. Error: ${error.message}`)
-          return {
-            statusCode: 500,
-            body: JSON.stringify({ error: err.message }),
-          }
-        } else {
-          console.log('Email sent successfully:', info)
-          return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Email sent successfully!' }),
-          }
-        }
-      })
-    },
     async onSubmit(event) {
       try {
         event.preventDefault(); // Prevent default form submission
