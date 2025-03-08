@@ -1,9 +1,9 @@
 
 require('dotenv').config()
 const { SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_SENDER_NAME, SMTP_SENDER_EMAIL } = process.env
-const nodemailer = require('nodemailer')
+import { createTransport } from 'nodemailer'
 
-exports.handler = async function handler(event) {
+export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed', headers: { Allow: 'POST' } }
   }
@@ -14,7 +14,7 @@ exports.handler = async function handler(event) {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,
       auth: {

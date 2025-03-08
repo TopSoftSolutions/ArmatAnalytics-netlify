@@ -161,7 +161,9 @@ export default {
         // Wait for the reCAPTCHA token
         const recaptchaToken = await this.$recaptcha.getResponse();
         if (!recaptchaToken) {
-          throw new Error("reCAPTCHA verification failed.");
+          this.submitMessageColor = "text-danger";
+          this.submitMessage = "reCAPTCHA verification failed.";
+          return;
         }
         
         // Submit the form to Netlify
@@ -172,8 +174,9 @@ export default {
 
         // Throw an error if the response was not successful
         if (!formResponse.ok) {
-          console.log("Form Submission Error:", formResponse);
-          throw new Error("Form submission failed. Please try again.");
+          this.submitMessageColor = "text-danger";
+          this.submitMessage = "Form submission failed. Please try again.";
+          return;
         }
 
         // If the form submission is successful, send an email
@@ -185,8 +188,9 @@ export default {
         });
 
         if (!emailResponse.ok) {
-          console.error("Email Sending Error:", emailResponse);
-          throw new Error("Email notification failed, but your application was received.");
+          this.submitMessageColor = "text-danger";
+          this.submitMessage = "Email notification failed, but your application was received.";
+          return;
         }
 
         // Success Message
