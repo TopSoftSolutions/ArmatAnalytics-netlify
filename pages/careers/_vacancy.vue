@@ -147,7 +147,7 @@ export default {
           name: formData.get('name')?.trim(),
           surname: formData.get('surname')?.trim(),
           phonenumber: formData.get('phonenumber')?.trim(),
-          email: formData.get('email')?.trim(),
+          email: formData.get('email')?.trim()
         };
 
         // Validate required fields
@@ -159,30 +159,47 @@ export default {
         }
 
         // Wait for the reCAPTCHA token
-        await this.$recaptcha.getResponse();
+        const recaptchaToken = await this.$recaptcha.getResponse();
+        if (!recaptchaToken) {
+          throw new Error("reCAPTCHA verification failed.");
+        }
         
         // Submit the form to Netlify
-        const response = await fetch(process.env.SUBMISSION_URL, {
+        const formResponse = await fetch('/', {
           method: "POST",
           body: formData,
         });
 
         // Throw an error if the response was not successful
-        if (!response.ok) {
-          console.log(response);
-          throw new Error("Response was not successful");
+        if (!formResponse.ok) {
+          console.log("Form Submission Error:", formResponse);
+          throw new Error("Form submission failed. Please try again.");
         }
 
-        // Say thank you and reset reCAPTCHA
+        // If the form submission is successful, send an email
+        fields["jobTitle"] = formData.get('form-name')?.trim();
+        const emailResponse = await fetch(this.$config.emailNotificationUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(fields),
+        });
+
+        if (!emailResponse.ok) {
+          console.error("Email Sending Error:", emailResponse);
+          throw new Error("Email notification failed, but your application was received.");
+        }
+
+        // Success Message
         this.submitMessageColor = "text-success";
         this.submitMessage = "Application successfully submitted. Thank you!";
-        await this.$recaptcha.reset();
 
         // Clear the form inputs
+        await this.$recaptcha.reset();
         event.target.reset();
         document.getElementById("file-input-text").innerText = "No file chosen";
       } catch {
         // Error message if something goes wrong
+        console.error(error);
         this.submitMessageColor = "text-danger";
         this.submitMessage = "Something went wrong, please try again.";
       }
