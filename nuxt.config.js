@@ -6,7 +6,7 @@ export default {
   target: 'static',
   components: true,
   generate: {
-    fallback: true
+    fallback: true,
   },
   // ? The env Property: https://nuxtjs.org/api/configuration-env/
   env: {
@@ -14,7 +14,7 @@ export default {
       process.env.NODE_ENV === 'production'
         ? process.env.URL || 'http://createADotEnvFileAndSetURL'
         : 'http://localhost:3000',
-    lang: SITE_INFO.sitelang || 'en-US'
+    lang: SITE_INFO.sitelang || 'en-US',
   },
   /*
    ** Headers of the page
@@ -27,39 +27,40 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: SITE_INFO.sitedescription || process.env.npm_package_description || ''
-      }
+        content: SITE_INFO.sitedescription || process.env.npm_package_description || '',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'preconnect',
         href: 'https://fonts.gstatic.com',
-        crossorigin: true
+        crossorigin: true,
       },
       {
         rel: 'preload',
         as: 'style',
-        href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap'
+        href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap',
       },
       {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap',
         media: 'print',
-        onload: `this.media='all'`
+        onload: `this.media='all'`,
       },
-      { rel: 'stylesheet',
+      {
+        rel: 'stylesheet',
         type: 'text/css',
-        href: 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css'
-      }
+        href: 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css',
+      },
     ], // ? Imports the font 'Inter', can be optimized by the netlify plugin 'Subfont' by uncommenting it in `netlify.toml`
     noscript: [
       {
         innerHTML:
-          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap">'
-      }
+          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap">',
+      },
     ],
-    __dangerouslyDisableSanitizers: ['noscript']
+    __dangerouslyDisableSanitizers: ['noscript'],
   },
   /*
    ** Customize the progress-bar color
@@ -75,7 +76,7 @@ export default {
   plugins: [
     { src: '~/plugins/vue-content-placeholders.js' },
     { src: '~/plugins/bootstrap.js' },
-    { src: '~/plugins/vueTyper.client.js', mode: 'client' }
+    { src: '~/plugins/vueTyper.client.js', mode: 'client' },
   ],
   /*
    ** Nuxt.js dev-modules
@@ -86,25 +87,26 @@ export default {
    */
   modules: ['bootstrap-vue/nuxt', '@nuxt/content', '@nuxtjs/markdownit', '@nuxtjs/recaptcha'],
   markdownit: {
-    runtime: true // Support `$md()`
+    runtime: true, // Support `$md()`
   },
   bootstrapVue: {
     bootstrapCSS: false,
     icons: true,
   },
   publicRuntimeConfig: {
+    emailNotificationUrl: process.env.EMAIL_NOTIFICATION_URL,
     recaptcha: {
       /* reCAPTCHA options */
       version: 2,
-      siteKey: process.env.SITE_RECAPTCHA_KEY // for example
-    }
+      siteKey: process.env.SITE_RECAPTCHA_KEY, // for example
+    },
   },
   /*
    ** Build configuration
    */
   build: {
     extractCSS: {
-      ignoreOrder: true
+      ignoreOrder: true,
     },
     optimization: {
       splitChunks: {
@@ -113,27 +115,27 @@ export default {
             name: 'styles',
             test: /\.(css|vue)$/,
             chunks: 'all',
-            enforce: true
-          }
-        }
-      }
+            enforce: true,
+          },
+        },
+      },
     },
     babel: {
-      compact: true
+      compact: true,
     },
     extend(config, ctx) {
       if (ctx.isClient) {
         // BootstrapVue and PortalVue require access to the global Vue reference (via import Vue from 'vue').
         config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js'
       }
-    }
+    },
   },
   /*
    ** Custom additions configuration
    */
   // ? The content property: https://content.nuxtjs.org/configuration
   content: {
-    dir: 'content'
+    dir: 'content',
   },
   colorMode: {
     classSuffix: '',
@@ -142,8 +144,8 @@ export default {
     componentName: 'ColorScheme',
     cookie: {
       options: {
-        sameSite: 'lax'
-      }
-    }
-  }
+        sameSite: 'lax',
+      },
+    },
+  },
 }

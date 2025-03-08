@@ -4,10 +4,10 @@
   "description": "Armat Analytics is a Functional Service Provider specialized in statistical programming, data management and clinical database design.",
   "author": "Pargev Melikyan",
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "dev": "set NODE_OPTIONS=--openssl-legacy-provider && nuxt",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && nuxt build",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && nuxt start",
+    "generate": "set NODE_OPTIONS=--openssl-legacy-provider && nuxt generate"
   },
   "repository": {
     "type": "git",
