@@ -69,13 +69,88 @@ export async function handler(event) {
 
     const recipients = [new Recipient(data.email, data.name)]
 
+    // Create HTML version of the email
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Application Confirmation</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333333;
+              margin: 0;
+              padding: 0;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+            }
+            .header {
+              background-color: #f8f9fa;
+              padding: 20px;
+              text-align: center;
+              border-bottom: 3px solid #0066cc;
+            }
+            .content {
+              padding: 20px;
+            }
+            .footer {
+              text-align: center;
+              padding: 20px;
+              font-size: 12px;
+              color: #666666;
+              border-top: 1px solid #eeeeee;
+            }
+            h1 {
+              color: #0066cc;
+            }
+            .highlight {
+              font-weight: bold;
+              color: #0066cc;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Application Received</h1>
+            </div>
+            <div class="content">
+              <p>Dear <span class="highlight">${data.name}</span>,</p>
+              
+              <p>Thank you for applying for the <span class="highlight">${
+                data.jobTitle
+              }</span> position at Armat Analytics.</p>
+              
+              <p>We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.</p>
+              
+              <p>If you have any questions about your application, please don't hesitate to reach out to our recruitment team.</p>
+              
+              <p>Best regards,<br>
+              Armat Analytics Team</p>
+            </div>
+            <div class="footer">
+              <p>© ${new Date().getFullYear()} Armat Analytics. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+
+    // Create plain text fallback version
+    const textContent = `Dear ${data.name},\n\nThank you for applying for the ${data.jobTitle} position at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\nBest regards,\nArmat Analytics Team`
+
     const emailParams = new EmailParams()
       .setFrom(sender)
       .setTo(recipients)
       .setSubject('Application Confirmation')
-      .setHtml(
-        `Dear ${data.name},\n\nThank you for applying for the ${data.jobTitle} position at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\nBest regards,\nArmat Analytics`
-      )
+      .setHtml(htmlContent)
+      .setText(textContent)
 
     const response = await mailerSend.email.send(emailParams)
     console.log('Email sent successfully:', response)
