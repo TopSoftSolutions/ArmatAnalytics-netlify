@@ -32,13 +32,14 @@ export const handler = async (event) => {
       text: `Dear ${data.name},\n\nThank you for applying for the ${data.jobTitle} position at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\nBest regards,\nArmat Analytics`,
     }
 
-    await transporter.sendMail(mailOptions)
+    // await transporter.sendMail(mailOptions)
 
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Emails sent successfully!' }),
     }
   } catch (err) {
+    console.log(err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message }),
