@@ -1,8 +1,11 @@
 [build]
-command = "NODE_OPTIONS='--openssl-legacy-provider' npm run generate"
-publish = "dist"
-functions = "netlify/functions"
-environment = { NODE_VERSION = "18.14.0", NPM_VERSION = "9.3.1" }
+  command = "NODE_OPTIONS='--openssl-legacy-provider' npm run generate"
+  publish = "dist"
+  functions = "netlify/functions"
+  environment = { NODE_VERSION = "18.14.0", NPM_VERSION = "9.3.1" }
+
+[functions]
+  node_bundler = "esbuild"
 
 # [[plugins]]
 # package = "netlify-plugin-subfont"
