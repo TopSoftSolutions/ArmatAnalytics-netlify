@@ -69,6 +69,8 @@ export async function handler(event) {
 
     const recipients = [new Recipient(data.email, data.name)]
 
+    const isRootProgram = data.jobTitle === 'The ROOT program'
+    const positionText = isRootProgram ? '' : 'position '
     // Create HTML version of the email
     const htmlContent = `
       <!DOCTYPE html>
@@ -125,11 +127,11 @@ export async function handler(event) {
               
               <p>Thank you for applying for the <span class="highlight">${
                 data.jobTitle
-              }</span> position at Armat Analytics.</p>
+              }</span> ${positionText}at Armat Analytics.</p>
               
               <p>We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.</p>
               
-              <p>If you have any questions about your application, please don't hesitate to reach out to our recruitment team.</p>
+              <p>If you have any questions about your application, please don't hesitate to reach out to our recruitment team at <a href="mailto:hr@armatanalytics.com">hr@armatanalytics.com</a>.</p>
               
               <p>Best regards,<br>
               Armat Analytics Team</p>
@@ -143,7 +145,7 @@ export async function handler(event) {
     `
 
     // Create plain text fallback version
-    const textContent = `Dear ${data.name},\n\nThank you for applying for the ${data.jobTitle} position at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\nBest regards,\nArmat Analytics Team`
+    const textContent = `Dear ${data.name},\n\nThank you for applying for the ${data.jobTitle} ${positionText}at Armat Analytics. We have received your application and will review it shortly. If your qualifications match our needs, we will contact you for the next steps.\n\nBest regards,\nArmat Analytics Team`
 
     const emailParams = new EmailParams()
       .setFrom(sender)
