@@ -1,5 +1,5 @@
 [build]
-command = "npm run generate"
+command = "NODE_OPTIONS='--openssl-legacy-provider' npm run generate"
 publish = "dist"
 functions = "netlify/functions"
 environment = { NODE_VERSION = "18.14.0", NPM_VERSION = "9.3.1" }
