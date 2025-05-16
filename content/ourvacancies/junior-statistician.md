@@ -9,16 +9,16 @@ description: >-
   - - -
 
 
-  ### **PREREQUISITES**
+  **PREREQUISITES**
 
 
-  #### **Education**
+  **Education**
 
 
   * University degree in Sciences or Engineering, with postgraduate studies in Biostatistics, Data Science, or equivalent statistical experience and knowledge.
 
 
-  #### **Skills and Competencies**
+  **Skills and Competencies**
 
 
   * Strong foundation in statistical theory, covering a wide range of methodologies and experimental designs.
