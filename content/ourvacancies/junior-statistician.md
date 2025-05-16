@@ -1,10 +1,9 @@
 ---
 title: Junior Statistician
 description: >-
-  ### **KEY RESPONSIBILITIES**
-
-
-  * Provide internal statistical support in close collaboration with laboratory scientists, technicians, and statisticians within the team.
+  Junior Statistician will provide internal statistical support in close
+  collaboration with laboratory scientists, technicians, and statisticians
+  within the team.
 
 
   - - -
