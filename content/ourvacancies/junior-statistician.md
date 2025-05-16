@@ -1,7 +1,7 @@
 ---
 title: Junior Biostatistician
 description: >-
-  Junior Statistician will provide internal statistical support in close
+  Junior biostatistician will provide internal statistical support in close
   collaboration with laboratory scientists, technicians, and statisticians
   within the team.
 
